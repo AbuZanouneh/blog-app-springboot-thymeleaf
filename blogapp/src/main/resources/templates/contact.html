@@ -1,0 +1,34 @@
+<!-- src/main/resources/templates/contact.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Contact Us</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment -->
+    <div th:replace="~{fragments/header :: header}"></div>
+    <br><!-- Line break -->
+    <!-- Contact Content -->
+    <h1>Contact Us</h1>
+    <p>If you have any questions, comments, or suggestions, feel free to reach out to us. We'd love to hear from you!</p>
+
+    <ul class="list-unstyled">
+        <li><strong>Email:</strong> <a href="mailto:info@blogapp.com">info@blogapp.com</a></li>
+        <li><strong>Phone:</strong> +1 (555) 123-4567</li>
+        <li><strong>Address:</strong> 123 Blog Street, Blog City, BL 12345</li>
+    </ul>
+
+    <!-- Back to Home Button -->
+    <a th:href="@{/}" class="btn btn-primary mt-3">Back to Home</a>
+    <br><!-- Line break -->
+    <!-- Include the footer fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</div>
+
+<!-- Include Bootstrap JS -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

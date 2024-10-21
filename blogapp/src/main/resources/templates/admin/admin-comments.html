@@ -1,0 +1,85 @@
+<!-- src/main/resources/templates/admin/admin-comments.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Manage Comments</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <h1>Comments</h1>
+
+    <!-- Red Label Below Header -->
+    <p class="text-danger">
+        Hello, <strong th:text="${#authentication.name}">Admin</strong>! You can only modify your own comments.
+    </p>
+
+    <!-- Success Message -->
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <span th:text="${message}">Operation successful.</span>
+    </div>
+
+    <!-- Error Message -->
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}">An error occurred.</span>
+    </div>
+    <!-- Comments Table -->
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Content</th>
+            <th>Author</th>
+            <th>Post Title</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comment : ${comments}">
+            <td th:text="${comment.id}">1</td>
+            <td th:text="${comment.content}">Comment Content</td>
+            <td th:text="${comment.author.username}">Author Name</td>
+            <td>
+                <a th:href="@{'/posts/' + ${comment.post.id}}" th:text="${comment.post.title}">Post Title</a>
+            </td>
+            <td th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy HH:mm')}">Created At</td>
+            <td th:text="${#temporals.format(comment.updatedAt, 'dd MMM yyyy HH:mm')}">Updated At</td>
+            <td>
+                <form th:action="@{'/admin/comments/edit/' + ${comment.id}}" method="get" style="display:inline;">
+                    <button type="submit" class="btn btn-secondary btn-sm"
+                            th:attr="disabled=${#authentication.name != comment.author.username} ? 'disabled'"
+                            th:title="${#authentication.name != comment.author.username} ? 'You can only edit your own comments' : ''">
+                        Edit
+                    </button>
+                </form>
+                <form th:action="@{'/admin/comments/delete/' + ${comment.id}}" method="get" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Are you sure you want to delete this comment?');">Delete</button>
+                </form>
+                <!-- Link to View Post -->
+                <a th:href="@{'/posts/' + ${comment.post.id}}" class="btn btn-info btn-sm">View Post</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls (Optional) -->
+    <!-- Implement pagination if needed -->
+
+    <!-- Back to Dashboard -->
+    <a class="btn btn-secondary" th:href="@{/admin/dashboard}">Back to Dashboard</a>
+</div>
+
+<!-- Include the footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

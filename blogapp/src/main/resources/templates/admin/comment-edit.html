@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Comment</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4" th:object="${comment}">
+    <!-- Include the header fragment -->
+    <div th:replace="~{fragments/header :: header}"></div>
+    <h1>Edit Comment</h1>
+
+    <!-- Display validation errors -->
+    <div th:if="${#fields.hasErrors()}">
+        <div th:each="err : ${#fields.errors('content')}" class="alert alert-danger" th:text="${err}"></div>
+    </div>
+
+    <form th:action="@{'/admin/comments/edit/' + ${comment.id}}" method="post" th:csrf="true">
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea class="form-control" th:field="*{content}" rows="5"></textarea>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-primary">Update Comment</button>
+        <a th:href="@{/admin/comments}" class="btn btn-secondary">Cancel</a>
+    </form>
+    <br><!-- Line break -->
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

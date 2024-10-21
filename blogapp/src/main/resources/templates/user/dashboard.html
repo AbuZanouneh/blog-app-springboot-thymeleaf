@@ -1,0 +1,37 @@
+<!-- src/main/resources/templates/user/dashboard.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>User Dashboard</title>
+    <!-- Link to local Bootstrap CSS using Thymeleaf -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/header :: header"></div>
+<h2 class="text-center mb-4">User Dashboard</h2>
+    <!-- Welcome Message -->
+    <div class="alert alert-primary text-center">
+    <p>Welcome, <span th:text="${#authentication.name}">User</span>!</p>
+    <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+</div>
+<hr>
+    <!-- User Functionalities -->
+    <div class="list-group">
+        <a th:href="@{/posts/create}" class="list-group-item list-group-item-action">Create New Post</a>
+        <a th:href="@{/user/profile}" class="list-group-item list-group-item-action">View Profile</a>
+        <a th:href="@{/user/posts}" class="list-group-item list-group-item-action">Manage Posts</a>
+        <a th:href="@{/user/comments}" class="list-group-item list-group-item-action">Manage Comments</a>
+
+    </div>
+    <br><!-- Line break -->
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Link to local Bootstrap JS using Thymeleaf -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</div>
+</body>
+</html>

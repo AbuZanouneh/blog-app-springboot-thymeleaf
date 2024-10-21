@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body class="container mt-5">
+<!-- Include the header fragment -->
+<div th:replace="fragments/header :: header"></div>
+
+<h2 class="text-center mb-4">User Profile</h2>
+
+<!-- Success Message -->
+<div th:if="${message}" class="alert alert-success" role="alert">
+    <span th:text="${message}">Profile updated successfully.</span>
+</div>
+
+<!-- Edit button -->
+<div class="text-right mb-3">
+    <a class="btn btn-primary" th:href="@{/user/edit}">Edit Profile</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Username:</strong> <span th:text="${user.username}">Username</span></p>
+        <p><strong>Email:</strong> <span th:text="${user.email}">Email</span></p>
+        <p th:if="${user.firstName != null}">
+            <strong>First Name:</strong> <span th:text="${user.firstName}">First Name</span>
+        </p>
+        <p th:if="${user.lastName != null}">
+            <strong>Last Name:</strong> <span th:text="${user.lastName}">Last Name</span>
+        </p>
+        <p><strong>Role:</strong> <span th:text="${user.role.name}">Role</span></p>
+        <p><strong>Account Enabled:</strong>
+            <span th:text="${user.enabled} ? 'Yes' : 'No'">Enabled</span>
+        </p>
+    </div>
+</div>
+
+<hr class="my-4">
+
+<div>
+    <a class="btn btn-secondary" th:href="@{/user/dashboard}">Back to Dashboard</a>
+    <a class="btn btn-danger" th:href="@{/logout}">Logout</a>
+</div>
+
+<br><!-- Line break -->
+<!-- Include the footer fragment -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

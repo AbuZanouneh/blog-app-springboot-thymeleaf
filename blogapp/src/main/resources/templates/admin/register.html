@@ -1,0 +1,86 @@
+<!-- src/main/resources/templates/admin/register.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New User/Admin</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <h1>Create New User/Admin</h1>
+
+    <!-- Error Messages -->
+    <div th:if="${usernameError}" class="alert alert-danger" role="alert">
+        <span th:text="${usernameError}">Username Error</span>
+    </div>
+    <div th:if="${emailError}" class="alert alert-danger" role="alert">
+        <span th:text="${emailError}">Email Error</span>
+    </div>
+    <div th:if="${roleError}" class="alert alert-danger" role="alert">
+        <span th:text="${roleError}">Role Error</span>
+    </div>
+
+    <!-- Registration Form -->
+    <form th:action="@{/admin/register}" th:object="${user}" method="post" th:csrf="true" class="border p-4 shadow-sm bg-light rounded">
+        <!-- Username Field -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" th:field="*{username}" class="form-control" id="username" placeholder="Enter username" required>
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Enter email" required>
+        </div>
+
+        <!-- First Name Field -->
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" th:field="*{firstName}" class="form-control" id="firstName" placeholder="Enter first name" required>
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" th:field="*{lastName}" class="form-control" id="lastName" placeholder="Enter last name" required>
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Enter password" required>
+        </div>
+
+        <!-- Role Selection Field -->
+        <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select name="role" class="form-control" id="role" required>
+                <option value="" disabled selected>Select a role</option>
+                <option th:each="role : ${roles}"
+                        th:value="${role.name}"
+                        th:text="${#strings.substring(role.name, 5)}">User</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a th:href="@{/admin/users}" class="btn btn-secondary">Back to Users</a>
+        </div>
+    </form>
+    <br><!-- Line break -->
+
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Include Bootstrap JS -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</div>
+</body>
+</html>
