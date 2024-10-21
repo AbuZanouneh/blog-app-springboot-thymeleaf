@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Access Denied</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body class="container mt-4">
+<!-- Access Denied Message -->
+<div class="alert alert-danger">
+    <h2 class="mb-4">Access Denied</h2>
+    <p>You do not have permission to access this page.</p>
+</div>
+<!-- Return to Home Button -->
+<a th:href="@{/}" class="btn btn-primary">Return to Home</a>
+</body>
+</html>

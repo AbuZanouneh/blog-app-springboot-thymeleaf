@@ -1,0 +1,51 @@
+<!-- src/main/resources/templates/admin/tag-create.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Create Tag</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <h1>Create New Tag</h1>
+
+    <!-- Display Success or Error Messages -->
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <span th:text="${message}">Operation successful.</span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}">An error occurred.</span>
+    </div>
+
+    <form th:action="@{/admin/tags/create}"
+          th:object="${tag}" method="post" th:csrf="true">
+        <!-- CSRF Token -->
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+
+        <!-- Name Field -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Enter tag name">
+            <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Create</button>
+
+        <!-- Back to Tags List -->
+        <a class="btn btn-secondary" th:href="@{/admin/tags}">Cancel</a>
+    </form>
+</div>
+
+<!-- Include the footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

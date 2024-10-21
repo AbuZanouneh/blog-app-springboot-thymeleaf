@@ -1,0 +1,90 @@
+<!-- src/main/resources/templates/admin/admin-tags.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Manage Tags</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <h1>Tags</h1>
+    <!-- Red Label Below Header -->
+    <p class="text-danger">
+        Hello, <strong th:text="${#authentication.name}">Admin</strong>! You can only modify all tags.</p>
+    <!-- Success Message -->
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <span th:text="${message}">Operation successful.</span>
+    </div>
+
+    <!-- Error Message -->
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}">An error occurred.</span>
+    </div>
+
+    <!-- Button to Create New Tag -->
+    <a th:href="@{/admin/tags/create}" class="btn btn-primary mb-3">Create New Tag</a>
+
+    <!-- Tags Table -->
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+<!--            <th>Description</th>-->
+            <th>Number of Posts</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tag : ${tags}">
+            <td th:text="${tag.id}">1</td>
+            <td th:text="${tag.name}">Tag Name</td>
+<!--            <td th:text="${tag.description}">Description</td>-->
+            <td th:text="${#numbers.formatInteger(tag.posts.size(), 0)}">0</td>
+            <td>
+                <a th:href="@{'/admin/tags/edit/' + ${tag.id}}" class="btn btn-secondary btn-sm">Edit</a>
+                <!-- No Delete Button as per requirement -->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <nav th:if="${totalPages > 1}" aria-label="Page navigation">
+        <ul class="pagination">
+            <!-- Previous Page Link -->
+            <li th:classappend="${currentPage == 0} ? 'disabled'">
+                <a th:href="@{'/admin/tags/'(page=${currentPage - 1}, size=${size})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <!-- Page Number Links -->
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a th:href="@{'/admin/tags/'(page=${i}, size=${size})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+            <!-- Next Page Link -->
+            <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a th:href="@{'/admin/tags/'(page=${currentPage + 1}, size=${size})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Back to Dashboard -->
+    <a class="btn btn-secondary" th:href="@{/admin/dashboard}">Back to Dashboard</a>
+</div>
+
+<!-- Include the footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

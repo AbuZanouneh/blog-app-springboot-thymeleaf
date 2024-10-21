@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Register</title>
+    <!-- Link to local Bootstrap CSS using Thymeleaf -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<!-- Include the header fragment -->
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-5">
+<h2 class="text-center mb-4">Register</h2>
+    <!-- Registration Form -->
+<form th:action="@{/register}" th:object="${user}" method="post" class="border p-4 shadow-sm bg-light rounded">
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" th:field="*{username}" class="form-control" id="username" required />
+        <div th:if="${usernameError}" th:text="${usernameError}" class="text-danger mt-1"></div>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" th:field="*{email}" class="form-control" id="email" required />
+        <div th:if="${emailError}" th:text="${emailError}" class="text-danger mt-1"></div>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" th:field="*{password}" class="form-control" id="password" required />
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger mt-1"></div>
+    </div>
+    <!-- Add other fields as necessary -->
+    <button type="submit" class="btn btn-primary btn-block mt-4">Register</button>
+</form>
+    <!-- Success Message -->
+    <p th:if="${registerSuccess}" th:text="${registerSuccess}" class="text-success mt-3"></p>
+    <!-- Login Link -->
+    <p class="mt-3">Already have an account? <a th:href="@{/login}">Login here</a>.</p>
+<!-- Include the footer fragment -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</div>
+</body>
+</html>

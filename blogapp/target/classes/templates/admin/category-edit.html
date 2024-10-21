@@ -1,0 +1,60 @@
+<!-- src/main/resources/templates/admin/category-edit.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title th:text="'Edit Category - ' + ${category.name}">Edit Category</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <h1>Edit Category</h1>
+
+    <!-- Display Success Message -->
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <span th:text="${message}">Operation successful.</span>
+    </div>
+
+    <!-- Display Error Message -->
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}">An error occurred.</span>
+    </div>
+
+    <form th:action="@{'/admin/categories/edit/' + ${category.id}}"
+          th:object="${category}" method="post" th:csrf="true">
+        <!-- CSRF Token -->
+<!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+
+        <!-- Name Field -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Enter category name">
+            <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+        </div>
+
+        <!-- Description Field -->
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea th:field="*{description}" class="form-control" id="description" rows="3"
+                      placeholder="Enter category description"></textarea>
+            <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Update</button>
+
+        <!-- Back to Categories List -->
+        <a class="btn btn-secondary" th:href="@{/admin/categories}">Cancel</a>
+    </form>
+</div>
+<br/>
+<!-- Include the footer fragment -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

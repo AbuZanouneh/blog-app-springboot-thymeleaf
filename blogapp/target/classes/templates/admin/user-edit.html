@@ -1,0 +1,84 @@
+<!-- src/main/resources/templates/admin/user-edit.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User/Admin</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment using the correct fragment expression syntax -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <h1>Edit User/Admin</h1>
+
+    <!-- Success Message -->
+    <div th:if="${registerSuccess}" class="alert alert-success" role="alert">
+        <span th:text="${registerSuccess}">User/Admin updated successfully.</span>
+    </div>
+
+    <!-- Error Messages -->
+    <div th:if="${usernameError}" class="alert alert-danger" role="alert">
+        <span th:text="${usernameError}">Username Error</span>
+    </div>
+    <div th:if="${emailError}" class="alert alert-danger" role="alert">
+        <span th:text="${emailError}">Email Error</span>
+    </div>
+
+    <!-- Edit Form -->
+    <form th:action="@{'/admin/users/edit/' + ${user.id}}" th:object="${user}" method="post" th:csrf="true" class="border p-4 shadow-sm bg-light rounded">
+        <!-- Username Field -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+            <input type="text" th:field="*{username}" class="form-control" id="username" placeholder="Enter username" required>
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Enter email" required>
+        </div>
+
+        <!-- First Name Field -->
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name <span class="text-danger">*</span></label>
+            <input type="text" th:field="*{firstName}" class="form-control" id="firstName" placeholder="Enter first name" required>
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+            <input type="text" th:field="*{lastName}" class="form-control" id="lastName" placeholder="Enter last name" required>
+        </div>
+
+        <!-- Password Field (Optional) -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password (Leave blank to keep current password)</label>
+            <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Enter new password if changing">
+        </div>
+
+        <!-- Role Display as Read-Only Field -->
+        <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <!-- Updated the Thymeleaf expression to use 'name' instead of 'displayName' -->
+            <input type="text" th:value="${user.role.name}" class="form-control" id="role" readonly>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a th:href="@{/admin/users}" class="btn btn-secondary">Back to Users</a>
+        </div>
+    </form>
+    <br><!-- Line break -->
+
+    <!-- Include the footer fragment using the correct fragment expression syntax -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <!-- Include Bootstrap JS -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!-- src/main/resources/templates/admin/post-create.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Post</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <!-- Include the header fragment -->
+    <div th:replace="fragments/header :: header"></div>
+    <h1>Create New Post</h1>
+    <form th:action="@{/admin/create}" th:object="${post}" method="post" th:csrf="true" enctype="multipart/form-data">
+        <!-- CSRF Token is automatically included with th:csrf -->
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" th:field="*{title}" class="form-control" id="title" placeholder="Enter post title" required>
+            <div th:if="${#fields.hasErrors('title')}" class="text-danger">
+                <p th:errors="*{title}">Title Error</p>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea th:field="*{content}" class="form-control" id="content" rows="10" placeholder="Enter post content" required></textarea>
+            <div th:if="${#fields.hasErrors('content')}" class="text-danger">
+                <p th:errors="*{content}">Content Error</p>
+            </div>
+        </div>
+
+        <!-- Category Select Section -->
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select th:field="*{category.id}" class="form-control" id="category" required>
+                <option value="" disabled selected>Select a category</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}">
+                </option>
+            </select>
+            <div th:if="${#fields.hasErrors('category')}" class="text-danger">
+                <p th:errors="*{category}">Category Error</p>
+            </div>
+        </div>
+
+        <!-- Tags Select Section -->
+        <div class="mb-3">
+            <label class="form-label">Tags</label>
+            <div>
+                <div th:each="tag : ${tags}" class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox"
+                           th:id="'tag-' + ${tag.id}"
+                           th:name="tagIds"
+                           th:value="${tag.id}"
+                           th:checked="${post.tags.contains(tag)}">
+                    <label class="form-check-label" th:for="'tag-' + ${tag.id}" th:text="${tag.name}">Tag Name</label>
+                </div>
+            </div>
+            <div th:if="${tagError != null}" class="text-danger">
+                <p th:text="${tagError}">Tag Error</p>
+            </div>
+        </div>
+
+        <!-- Image Upload Section -->
+        <div class="mb-3">
+            <label for="imageFile" class="form-label">Upload Image</label>
+            <input type="file" name="imageFile" class="form-control" id="imageFile">
+            <!-- Display Image Error -->
+            <div th:if="${imageError != null}" class="text-danger">
+                <p th:text="${imageError}">Image Error</p>
+            </div>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Create Post</button>
+            <a class="btn btn-secondary" th:href="@{/admin/dashboard}">Back to Dashboard</a>
+        </div>
+    </form>
+    <br><!-- Line break -->
+    <!-- Include the footer fragment -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Include Bootstrap JS -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</div>
+</body>
+</html>
+
+
+<!--&lt;!&ndash; src/main/resources/templates/admin/post-create.html &ndash;&gt;-->
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Create New Post</title>-->
+<!--    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container mt-4">-->
+<!--    &lt;!&ndash; Include the header fragment &ndash;&gt;-->
+<!--    <div th:replace="fragments/header :: header"></div>-->
+<!--    <h1>Create New Post</h1>-->
+<!--    <form th:action="@{/admin/create}" th:object="${post}" method="post" th:csrf="true" enctype="multipart/form-data">-->
+<!--        &lt;!&ndash;    <form th:action="@{/posts/create}" th:object="${post}" method="post">&ndash;&gt;-->
+<!--        &lt;!&ndash; CSRF Token &ndash;&gt;-->
+<!--        &lt;!&ndash;        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>&ndash;&gt;-->
+
+<!--        <div class="mb-3">-->
+<!--            <label for="title" class="form-label">Title</label>-->
+<!--            <input type="text" th:field="*{title}" class="form-control" id="title" placeholder="Enter post title" required>-->
+<!--            <div th:if="${#fields.hasErrors('title')}" class="text-danger">-->
+<!--                <p th:errors="*{title}">Title Error</p>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="mb-3">-->
+<!--            <label for="content" class="form-label">Content</label>-->
+<!--            <textarea th:field="*{content}" class="form-control" id="content" rows="10" placeholder="Enter post content" required></textarea>-->
+<!--            <div th:if="${#fields.hasErrors('content')}" class="text-danger">-->
+<!--                <p th:errors="*{content}">Content Error</p>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; You can add more fields here, such as category, tags, image upload, etc. &ndash;&gt;-->
+
+<!--        &lt;!&ndash; New Category Select Section &ndash;&gt;-->
+<!--        <div class="mb-3">-->
+<!--            <label for="category" class="form-label">Category</label>-->
+<!--            <select th:field="*{category.id}" class="form-control" id="category" required>-->
+<!--                <option value="" disabled selected>Select a category</option>-->
+<!--                <option th:each="category : ${categories}"-->
+<!--                        th:value="${category.id}"-->
+<!--                        th:text="${category.name}">-->
+<!--                </option>-->
+<!--            </select>-->
+<!--            <div th:if="${#fields.hasErrors('category')}" class="text-danger">-->
+<!--                <p th:errors="*{category}">Category Error</p>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; New Tags Select Section &ndash;&gt;-->
+<!--        <div class="mb-3">-->
+<!--            <label class="form-label">Tags</label>-->
+<!--            <div>-->
+<!--                <div th:each="tag : ${tags}" class="form-check form-check-inline">-->
+<!--                    <input class="form-check-input" type="checkbox"-->
+<!--                           th:id="'tag-' + ${tag.id}"-->
+<!--                           th:name="tagIds"-->
+<!--                           th:value="${tag.id}"-->
+<!--                           th:checked="${post.tags.contains(tag)}">-->
+<!--                    <label class="form-check-label" th:for="'tag-' + ${tag.id}" th:text="${tag.name}">Tag Name</label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div th:if="${tagError != null}" class="text-danger">-->
+<!--                <p th:text="${tagError}">Tag Error</p>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="mb-3">-->
+<!--            <label for="imageFile" class="form-label">Upload Image</label>-->
+<!--            <input type="file" name="imageFile" class="form-control" id="imageFile">-->
+<!--            &lt;!&ndash; Display Image Error &ndash;&gt;-->
+<!--            <div th:if="${imageError != null}" class="text-danger">-->
+<!--                <p th:text="${imageError}">Image Error</p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; You can add more fields here, such as category, tags, image upload, etc. &ndash;&gt;-->
+<!--        <div>-->
+<!--            <button type="submit" class="btn btn-primary">Create Post</button>-->
+<!--            <a class="btn btn-secondary" th:href="@{/admin/dashboard}">Back to Dashboard</a>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--    <br>&lt;!&ndash; Line break &ndash;&gt;-->
+<!--    &lt;!&ndash; Include the footer fragment &ndash;&gt;-->
+<!--    <div th:replace="fragments/footer :: footer"></div>-->
+
+<!--    &lt;!&ndash; Include Bootstrap JS &ndash;&gt;-->
+<!--    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

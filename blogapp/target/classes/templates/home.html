@@ -1,0 +1,277 @@
+<!-- src/main/resources/templates/home.html -->
+<!-- src/main/resources/templates/home.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${selectedCategory != null} ? 'Category: ' + ${selectedCategory.name} + ' - MyApp' : 'Home - MyApp'">Home - MyApp</title>
+    <!-- Link to local Bootstrap CSS using Thymeleaf -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        .post-card {
+            transition: transform 0.2s;
+        }
+        .post-card:hover {
+            transform: scale(1.02);
+        }
+        .post-content {
+            max-height: 150px;
+            overflow: hidden;
+        }
+        /* Image styling */
+        .post-image {
+            max-height: 300px;
+            overflow: hidden;
+        }
+        .post-image img {
+            width: 100%;
+            height: auto;
+        }
+        /* Sidebar styling */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+        }
+        /* Highlight selected category or tag */
+        .active-category, .active-tag {
+            background-color: #d4f4fd;
+            color: white;
+        }
+        /* Custom category and tag styling */
+        .category-item a, .tag-item a {
+            color: #0d6efd;
+            font-weight: bold;
+        }
+        .category-item a:hover, .tag-item a:hover {
+            color: #dc3545;
+            text-decoration: underline;
+        }
+        .category-badge {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .tag-badge {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<!-- Include the header fragment -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-4">
+    <h1 class="mb-4" th:text="${selectedCategory != null} ? 'Category: ' + ${selectedCategory.name} : 'Welcome to the Blog Application'">Welcome to the Blog Application</h1>
+
+    <!-- User Authentication Links -->
+    <div th:if="${#authentication.name != 'anonymousUser'}" class="mb-3">
+        <p>Hello, <span th:text="${#authentication.name}">User</span>!</p>
+        <a th:href="@{/logout}" class="btn btn-secondary">Logout</a>
+    </div>
+
+    <div th:if="${#authentication.name == 'anonymousUser'}" class="mb-3">
+        <a th:href="@{/login}" class="btn btn-primary">Login</a>
+        <a th:href="@{/register}" class="btn btn-success">Register</a>
+    </div>
+
+    <hr>
+
+    <!-- Dashboard Links -->
+    <div class="mb-4">
+        <a th:href="@{/admin/dashboard}" class="btn btn-warning">Admin Dashboard</a>
+        <a th:href="@{/user/dashboard}" class="btn btn-info">User Dashboard</a>
+    </div>
+
+    <!-- Main Content Area with Posts and Sidebar for Categories and Tags -->
+    <div class="row">
+        <!-- Posts Section -->
+        <div class="col-lg-8">
+            <h2 class="mb-3" th:text="${selectedCategory != null} ? 'Posts in ' + ${selectedCategory.name} : 'Latest Posts'">Latest Posts</h2>
+
+            <div th:if="${#lists.isEmpty(posts)}" class="alert alert-info">
+                <p th:text="${selectedCategory != null} ? 'No posts available in this category.' : 'No posts available at the moment. Please check back later!'">
+                    No posts available.
+                </p>
+            </div>
+
+            <div th:each="post : ${posts}" class="card mb-4 post-card">
+                <!-- Display Post Image -->
+                <div th:if="${post.imagePath != null}" class="post-image">
+                    <img th:src="@{${post.imagePath}}" alt="Post Image" class="img-fluid mb-3">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${post.title}">Post Title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        By <span th:text="${post.author.username}">Author</span> on
+                        <span th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>
+                    </h6>
+                    <p class="card-text post-content" th:text="${#strings.abbreviate(post.content, 200)}">Post content...</p>
+                    <a th:href="@{'/posts/' + ${post.id}}" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories and Tags Sidebar -->
+        <div class="col-lg-4">
+            <div class="sidebar">
+                <!-- Categories Section -->
+                <h3>Categories</h3>
+                <ul class="list-group">
+                    <li th:if="${#lists.isEmpty(categories)}" class="list-group-item">
+                        No categories available.
+                    </li>
+                    <li th:each="category : ${categories}"
+                        th:classappend="${selectedCategory != null} and (${category.id} == ${selectedCategory.id}) ? ' active-category' : ''"
+                        class="list-group-item category-item d-flex justify-content-between align-items-center">
+                        <a th:href="@{'/categories/' + ${category.id}}" th:text="${category.name}">Category Name</a>
+<!--                        <span class="badge bg-primary rounded-pill" th:text="${#lists.size(category.posts)}">0</span>-->
+                    </li>
+                </ul>
+
+                <!-- Tags Section -->
+                <h3 class="mt-4">Tags</h3>
+                <ul class="list-group">
+                    <li th:if="${#lists.isEmpty(tags)}" class="list-group-item">
+                        No tags available.
+                    </li>
+                    <li th:each="tag : ${tags}"
+                        th:classappend="${selectedTag != null} and (${tag.id} == ${selectedTag.id}) ? ' active-category' : ''"
+                        class="list-group-item tag-item d-flex justify-content-between align-items-center">
+                        <a th:href="@{'/tags/' + ${tag.id}}" th:text="${tag.name}">Tag Name</a>
+<!--                        <span class="badge bg-secondary rounded-pill" th:text="${#lists.size(tag.posts)}">0</span>-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <nav aria-label="Page navigation example" th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li th:classappend="${currentPage == 0} ? 'disabled'" class="page-item">
+                <a th:href="@{${selectedCategory != null} ? '/categories/' + ${selectedCategory.id} + '?page=' + (${currentPage} - 1) : '/home?page=' + (${currentPage} - 1)}" class="page-link">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'" class="page-item">
+                <a th:href="@{${selectedCategory != null} ? '/categories/' + ${selectedCategory.id} + '?page=' + ${i} : '/home?page=' + ${i}}" class="page-link" th:text="${i + 1}">1</a>
+            </li>
+            <li th:classappend="${currentPage >= totalPages - 1} ? 'disabled'" class="page-item">
+                <a th:href="@{${selectedCategory != null} ? '/categories/' + ${selectedCategory.id} + '?page=' + (${currentPage} + 1) : '/home?page=' + (${currentPage} + 1)}" class="page-link">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<br><!-- Line break -->
+<!-- Include the footer fragment -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+<!--<head>-->
+<!--    <title>Home</title>-->
+<!--&lt;!&ndash;    <link href="static/css/styles.css" rel="stylesheet">&ndash;&gt;-->
+<!--    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">-->
+<!--    &lt;!&ndash; Custom CSS &ndash;&gt;-->
+<!--    <style>-->
+<!--        .post-card {-->
+<!--            transition: transform 0.2s;-->
+<!--        }-->
+<!--        .post-card:hover {-->
+<!--            transform: scale(1.02);-->
+<!--        }-->
+<!--        .post-content {-->
+<!--            max-height: 150px;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+<!--        /* Sidebar styling */-->
+<!--        .sidebar {-->
+<!--            position: sticky;-->
+<!--            top: 20px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Include the header fragment &ndash;&gt;-->
+<!--<div th:replace="fragments/header :: header"></div>-->
+<!--<h1>Welcome to the Blog Application</h1>-->
+<!--&lt;!&ndash; User Authentication Links &ndash;&gt;-->
+<!--<div th:if="${#authentication.name != 'anonymousUser'}">-->
+<!--    <p>Hello, <span th:text="${#authentication.name}">User</span>!</p>-->
+<!--    <a th:href="@{/logout}">Logout</a>-->
+<!--</div>-->
+
+<!--<div th:if="${#authentication.name == 'anonymousUser'}">-->
+<!--    <a th:href="@{/login}">Login</a> |-->
+<!--    <a th:href="@{/register}">Register</a>-->
+<!--</div>-->
+
+<!--<hr>-->
+<!--&lt;!&ndash; Dashboard Links &ndash;&gt;-->
+<!--<div>-->
+<!--    <a th:href="@{/admin/dashboard}">Admin Dashboard</a> |-->
+<!--    <a th:href="@{/user/dashboard}">User Dashboard</a>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Display the list of posts & Categories &ndash;&gt;-->
+<!--&lt;!&ndash; Main Content Area with Posts and Sidebar for Categories &ndash;&gt;-->
+<!--<div class="row">-->
+<!--    &lt;!&ndash; Posts Section &ndash;&gt;-->
+<!--    <div class="col-lg-8">-->
+<!--        <h2 class="mb-3">Latest Posts</h2>-->
+
+<!--        <div th:if="${#lists.isEmpty(posts)}" class="alert alert-info">-->
+<!--            <p>No posts available at the moment. Please check back later!</p>-->
+<!--        </div>-->
+
+<!--        <div th:each="post : ${posts}" class="card mb-4 post-card">-->
+<!--            <div class="card-body">-->
+<!--                <h5 class="card-title" th:text="${post.title}">Post Title</h5>-->
+<!--                <h6 class="card-subtitle mb-2 text-muted">-->
+<!--                    By <span th:text="${post.author.username}">Author</span> on-->
+<!--                    <span th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>-->
+<!--                </h6>-->
+<!--                <p class="card-text post-content" th:text="${#strings.abbreviate(post.content, 200)}">Post content...</p>-->
+<!--                <a th:href="@{'/posts/' + ${post.id}}" class="btn btn-primary">Read More</a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Categories Sidebar &ndash;&gt;-->
+<!--    <div class="col-lg-4">-->
+<!--        <div class="sidebar">-->
+<!--            <h3>Categories</h3>-->
+<!--            <ul class="list-group">-->
+<!--                <li th:if="${#lists.isEmpty(categories)}" class="list-group-item">-->
+<!--                    No categories available.-->
+<!--                </li>-->
+<!--                <li th:each="category : ${categories}" class="list-group-item d-flex justify-content-between align-items-center">-->
+<!--                    <a th:href="@{'/categories/' + ${category.id}}" th:text="${category.name}">Category Name</a>-->
+<!--                    <span class="badge bg-primary rounded-pill" th:text="${#lists.size(category.posts)}">0</span>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</div>-->
+
+
+<!--&lt;!&ndash;<br/>&lt;!&ndash; Line break &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<br/>&lt;!&ndash; Line break &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash; Include the footer fragment &ndash;&gt;-->
+<!--<div th:replace="fragments/footer :: footer"></div>-->
+<!--<script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
+<!--</body>-->
+<!--</html>-->

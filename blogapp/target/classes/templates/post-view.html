@@ -1,0 +1,203 @@
+<!-- src/main/resources/templates/post-view.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}">Post Title</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        /* Custom CSS for Image Styling */
+        .post-image {
+            position: relative;
+            width: 100%;
+            height: 300px; /* Medium size: Adjust as needed */
+            overflow: hidden;
+            border-radius: 5px; /* Optional: Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Shadow */
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the image covers the container */
+            object-position: center; /* Centers the image */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 576px) {
+            .post-image {
+                height: 200px; /* Adjust height for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Include the header fragment -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container mt-4">
+    <!-- Post Title -->
+    <h1 th:text="${post.title}">Post Title</h1>
+
+    <!-- Post Metadata: Author and Date -->
+    <p class="text-muted">
+        By <span th:text="${post.author.username}">Author</span> on
+        <span th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>
+    </p>
+
+    <!-- Post Image -->
+    <div th:if="${post.imagePath != null}" class="post-image mb-4">
+        <img th:src="@{${post.imagePath}}" alt="Post Image">
+    </div>
+
+    <!-- Post Content -->
+    <div class="mb-4" th:utext="${post.content}">Post Content</div>
+
+    <hr>
+
+    <!-- Comments Section -->
+<!--    <h3>Comments</h3>-->
+    <h3>Comments (<span th:text="${#lists.size(post.comments)}">0</span>)</h3>
+
+    <!-- No Comments Message -->
+    <div th:if="${#lists.isEmpty(post.comments)}">
+        <p>No comments yet. Be the first to comment!</p>
+    </div>
+    <!-- List of Comments -->
+    <div th:each="comment : ${post.comments}" class="card mb-2">
+        <div class="card-body">
+            <p th:text="${comment.content}">Comment content...</p>
+            <p class="text-muted">
+                By <span th:text="${comment.author.username}">Commenter</span> on
+                <span th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy')}">Date</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Comment Form (visible only to authenticated users) -->
+    <div th:if="${#authentication.name != 'anonymousUser'}" class="mt-4">
+        <h4>Add a Comment</h4>
+        <form th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post" th:object="${comment}">
+            <div class="mb-3">
+                <textarea class="form-control" th:field="*{content}" rows="3" placeholder="Your comment here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- Prompt to Login (Visible to Anonymous Users) -->
+    <div th:if="${#authentication.name == 'anonymousUser'}" class="mt-4">
+        <p><a th:href="@{/login}">Login</a> to add a comment.</p>
+    </div>
+</div>
+<br><!-- Line break -->
+<!-- Include the footer fragment -->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Link to local Bootstrap JS using Thymeleaf -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
+
+
+<!-- src/main/resources/templates/post-view.html -->
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:text="${post.title}">Post Title</title>-->
+<!--    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">-->
+<!--    <style>-->
+<!--        /* Custom CSS for Image Styling */-->
+<!--        .post-image {-->
+<!--            position: relative;-->
+<!--            width: 100%;-->
+<!--            height: 300px; /* Medium size: Adjust as needed */-->
+<!--            overflow: hidden;-->
+<!--            border-radius: 5px; /* Optional: Rounded corners */-->
+<!--            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Shadow */-->
+<!--        }-->
+
+<!--        .post-image img {-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            object-fit: cover; /* Ensures the image covers the container */-->
+<!--            object-position: center; /* Centers the image */-->
+<!--        }-->
+
+<!--        /* Responsive Adjustments */-->
+<!--        @media (max-width: 576px) {-->
+<!--            .post-image {-->
+<!--                height: 200px; /* Adjust height for smaller screens */-->
+<!--            }-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Include the header fragment &ndash;&gt;-->
+<!--<div th:replace="fragments/header :: header"></div>-->
+
+<!--<div class="container mt-4">-->
+<!--    &lt;!&ndash; Post Title &ndash;&gt;-->
+<!--    <h1 th:text="${post.title}">Post Title</h1>-->
+
+<!--    &lt;!&ndash; Post Metadata: Author and Date &ndash;&gt;-->
+<!--    <p class="text-muted">-->
+<!--        By <span th:text="${post.author.username}">Author</span> on-->
+<!--        <span th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy')}">Date</span>-->
+<!--    </p>-->
+
+<!--    &lt;!&ndash; Post Image &ndash;&gt;-->
+<!--    <div th:if="${post.imagePath != null}" class="post-image mb-4">-->
+<!--        <img th:src="@{${post.imagePath}}" alt="Post Image">-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Post Content &ndash;&gt;-->
+<!--    <div class="mb-4" th:utext="${post.content}">Post Content</div>-->
+
+<!--    <hr>-->
+
+<!--    &lt;!&ndash; Comments Section &ndash;&gt;-->
+<!--    <h3>Comments</h3>-->
+<!--    &lt;!&ndash; No Comments Message &ndash;&gt;-->
+<!--    <div th:if="${#lists.isEmpty(post.comments)}">-->
+<!--        <p>No comments yet. Be the first to comment!</p>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; List of Comments &ndash;&gt;-->
+<!--    <div th:each="comment : ${post.comments}" class="card mb-2">-->
+<!--        <div class="card-body">-->
+<!--            <p th:text="${comment.content}">Comment content...</p>-->
+<!--            <p class="text-muted">-->
+<!--                By <span th:text="${comment.author.username}">Commenter</span> on-->
+<!--                <span th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy')}">Date</span>-->
+<!--            </p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Comment Form (visible only to authenticated users) &ndash;&gt;-->
+<!--    <div th:if="${#authentication.name != 'anonymousUser'}" class="mt-4">-->
+<!--        <h4>Add a Comment</h4>-->
+<!--        <form th:action="@{'/posts/' + ${post.id} + '/comments'}" method="post" th:object="${comment}">-->
+<!--            <div class="mb-3">-->
+<!--                <textarea class="form-control" th:field="*{content}" rows="3" placeholder="Your comment here..." required></textarea>-->
+<!--            </div>-->
+<!--            <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--        </form>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Prompt to Login (Visible to Anonymous Users) &ndash;&gt;-->
+<!--    <div th:if="${#authentication.name == 'anonymousUser'}" class="mt-4">-->
+<!--        <p><a th:href="@{/login}">Login</a> to add a comment.</p>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Include the footer fragment &ndash;&gt;-->
+<!--<div th:replace="fragments/footer :: footer"></div>-->
+
+<!--&lt;!&ndash; Link to local Bootstrap JS using Thymeleaf &ndash;&gt;-->
+<!--<script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
+<!--</body>-->
+<!--</html>-->
+

@@ -1,0 +1,56 @@
+<!-- src/main/resources/templates/admin/dashboard.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Admin Dashboard</title>
+    <!-- Link to local Bootstrap CSS using Thymeleaf -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <div th:replace="~{fragments/header :: header}"></div>
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+    <!-- Welcome Message -->
+    <div class="alert alert-success text-center">
+        <p>Welcome, <span th:text="${#authentication.name}">Admin</span>!</p>
+        <a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+    </div>
+<!--<a th:href="@{/logout}">Logout</a>-->
+<hr>
+<!--<div>-->
+<!--    <ul>-->
+<!--        <li><a th:href="@{/admin/profile}">View Profile</a></li>-->
+<!--        <li><a th:href="@{/admin/users}">Manage Users</a></li>-->
+<!--        <li><a th:href="@{/admin/posts}">Manage Posts</a></li>-->
+<!--        &lt;!&ndash; View & delete&ndash;&gt;-->
+<!--        <li><a th:href="@{/admin/comments}">Manage Comments</a></li>-->
+<!--        &lt;!&ndash; Delete & update & create&ndash;&gt;-->
+<!--        <li><a th:href="@{/admin/categories}">Manage Categories</a></li>-->
+<!--        &lt;!&ndash; Delete & update & create&ndash;&gt;-->
+<!--        <li><a th:href="@{/admin/tags}">Manage Tags</a></li>-->
+
+<!--        &lt;!&ndash; Add more admin functionalities as needed &ndash;&gt;-->
+<!--    </ul>-->
+<!--</div>-->
+    <!-- Dashboard Navigation -->
+    <div class="list-group mt-4">
+        <a th:href="@{/admin/profile}" class="list-group-item list-group-item-action">View Profile</a>
+        <a th:href="@{/admin/users}" class="list-group-item list-group-item-action">Manage Users</a>
+        <a th:href="@{/admin/posts}" class="list-group-item list-group-item-action">Manage Posts</a>
+        <a th:href="@{/admin/comments}" class="list-group-item list-group-item-action">Manage Comments</a>
+        <a th:href="@{/admin/categories}" class="list-group-item list-group-item-action">Manage Categories</a>
+        <a th:href="@{/admin/tags}" class="list-group-item list-group-item-action">Manage Tags</a>
+        <!-- Add more admin functionalities as needed -->
+    </div>
+
+    <!-- Logout Button -->
+<!--    <div class="mt-4">-->
+<!--        <a th:href="@{/logout}" class="btn btn-danger">Logout</a>-->
+<!--    </div>-->
+    <br><!-- Line break -->
+    <!-- Include the footer fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</div>
+</body>
+</html>
