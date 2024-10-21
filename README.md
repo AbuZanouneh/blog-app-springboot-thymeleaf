@@ -55,7 +55,7 @@ For Admin:
   
 For User:
 - ** Username: user
-  ** Password: user123
+- ** Password: user123
 
 # Technologies Used
   * Backend:
